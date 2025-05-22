@@ -1,0 +1,181 @@
+@import "tailwindcss";
+
+@layer base {
+  @font-face {
+    font-family: "Garnett";
+    src: local("Garnett-Regular"),
+      url("assets/fonts/GarnettRegular.woff2") format("woff2"),
+      url("assets/fonts/GarnettRegular.woff") format("woff");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Garnett";
+    src: local("Garnett-Medium"),
+      url("assets/fonts/GarnettMedium.woff2") format("woff2"),
+      url("assets/fonts/GarnettMedium.woff") format("woff");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Garnett";
+    src: local("Garnett-Semibold"),
+      url("assets/fonts/GarnettSemibold.woff2") format("woff2"),
+      url("assets/fonts/GarnettSemibold.woff") format("woff");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Greed";
+    src: local("Greed-Regular"),
+      url("assets/fonts/GreedNarrow-Regular.woff2") format("woff2"),
+      url("assets/fonts/GreedNarrow-Regular.woff") format("woff");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Greed";
+    src: local("Greed-Semibold"),
+      url("assets/fonts/GreedNarrow-SemiBold.woff2") format("woff2"),
+      url("assets/fonts/GreedNarrow-SemiBold.woff") format("woff");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  :root {
+    --garnett: "Garnett", sans-serif;
+    --greed: "Greed", sans-serif;
+    --yellow: 40 100% 66%;
+    --dark-green: 128 49% 15%;
+    --white: 0 0% 100%;
+  }
+
+  body {
+    font-family: var(--garnett);
+  }
+}
+
+
+@theme {
+  --font-garnett: var(--garnett);
+  --font-greed: var(--greed);
+  --color-yellow: hsl(var(--yellow));
+  --color-dark-green: hsl(var(--dark-green));
+  --color-white: hsl(var(--white));
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.policy__content,
+.cookie__content,
+.terms__content {
+  max-width: 1200px;
+  padding-left: 16px;
+  padding-right: 16px;
+  margin: 0 auto;
+  padding-top: clamp(40px, 5vw, 90px)
+}
+
+.definitions::after {
+  content: "";
+  display: block;
+  background-image: var(--icon-url);
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 30px;
+  height: 30px;
+}
+
+.definitionsLogoTerms:after {
+  width: 100px;
+  height: 16px;
+  content: "";
+  display: block;
+  background-image: var(--icon-url);
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.definitionsTerms:after {
+  content: "";
+  display: block;
+  background-image: var(--icon-url);
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 50px;
+  height: 60px;
+}
+
+.images {
+  width: 250px;
+  height: 160px;
+  position: absolute;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+.parag {
+  padding-bottom: clamp(16px, 5vw, 24px);
+  font-size: 14px;
+  color: #143b19;
+  line-height: 1.5625;
+}
+
+.rights::before {
+  content: "";
+  display: block;
+  background-image: var(--icon-url);
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 50px;
+  height: 50px;
+  justify-self: center;
+}
+
+@media(min-width: 768px) {
+
+
+  .definitions::after {
+    width: 55px;
+    height: 55px;
+  }
+
+  .definitionsLogoTerms:after {
+    width: 200px;
+    height: 32px;
+  }
+
+  .definitionsTerms:after {
+    width: 80px;
+    height: 90px;
+  }
+
+  .parag {
+    font-size: 16px;
+  }
+}
+
+@media(min-width: 628px) {
+  .rights::before {
+  width: 85px;
+  height: 90px;
+}}
+
+@media(max-width: 450px) {
+  .menu {
+    width: 100%;
+    right: -100%
+  }
+}
