@@ -1,6 +1,8 @@
 import React from "react";
 import  Title  from "../ui/Title";
 import { useNavigate } from "react-router";
+import appImage from '../../assets/images/app.png'
+import appMobileImage from '../../assets/images/app-mobile.png'
 
 const QuietWaitlistSection = () => {
   const navigate = useNavigate();
@@ -25,17 +27,17 @@ const QuietWaitlistSection = () => {
             <picture>
               <source
                 media="(min-width: 768px)"
-                srcSet="/src/assets/images/app-mobile.png"
+                srcSet={appMobileImage}
               />
               <img
                 className="md:max-w-[600px]"
-                src="/src/assets/images/app.png"
-                alt="App mockup"
+                src={appImage}
+                alt="App preview"
               />
             </picture>
           </div>
           <div className="flex justify-center items-center w-full mb-12">
-            <form className="flex justify-stretch flex-col sm:w-[500px] w-[230px]">
+            <form className="flex justify-stretch flex-col sm:w-[500px] w-[250px]">
               <div className="flex flex-col gap-2 mb-5">
                 <input
                   type="email"
