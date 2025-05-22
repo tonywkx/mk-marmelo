@@ -1,5 +1,5 @@
 import React from "react";
-import { Title } from "../../utils/Title";
+import  Title  from "../ui/Title";
 import { useNavigate } from "react-router";
 
 const QuietWaitlistSection = () => {

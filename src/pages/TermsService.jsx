@@ -1,9 +1,9 @@
 import Footer from "../components/section/Footer"
 import Header from "../components/layout/Header"
 import { termsOfServiceData } from "../data/termsServiceData"
-import { renderParagraph } from "../utils/renderParagraph"
-import { renderTitle } from "../utils/renderTitle"
-import { renderList } from "../utils/renderList"
+import { renderParagraph } from "../components/ui/renderParagraph"
+import { renderTitle } from "../components/ui/renderTitle"
+import { renderList } from "../components/ui/renderList"
 import { Link } from "react-router"
 
 const TermsService = () => {

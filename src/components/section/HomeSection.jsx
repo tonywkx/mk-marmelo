@@ -1,9 +1,5 @@
-/* eslint-disable react/prop-types */
-
-import { Link } from "react-router";
-import { Title } from "../../utils/Title";
-import { ArrowYellow } from "../../utils/ArrowYellow";
 import  HeaderMain  from "../layout/HeaderMain";
+import  ArrowYellow  from "../ui/ArrowYellow";
 
 const HomeSection = () => {
   const handleClick = (e, name) => {

@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import Palm from "../../utils/Palm";
+import Palm from "../ui/Palm";
 
 const Footer = () => {
   return (

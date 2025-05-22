@@ -1,4 +1,4 @@
-import { Title } from "../../utils/Title";
+import  Title  from "../ui/Title";
 
 const NoSpam = () => {
   return (

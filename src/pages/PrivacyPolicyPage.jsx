@@ -1,8 +1,7 @@
-import gsap from "gsap";
 import Footer from "../components/section/Footer";
-import { renderParagraph } from "../utils/renderParagraph";
-import { renderTitle } from "../utils/renderTitle";
-import { renderList } from "../utils/renderList";
+import { renderParagraph } from "../components/ui/renderParagraph";
+import { renderTitle } from "../components/ui/renderTitle";
+import { renderList } from "../components/ui/renderList";
 import { privacyPolicyData } from "../data/privacyPolicyData";
 import { Link } from "react-router";
 import Header from "../components/layout/Header"
