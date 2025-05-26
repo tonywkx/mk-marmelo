@@ -34,7 +34,7 @@ const TermsService = () => {
           <div className="flex justify-center">
             <p className="text-xs font-medium text-dark-green m-auto inline-block  mt-4 max-w-[60%] text-center mx-auto">
               THESE TERMS OF USE ARE EFFECTIVE AS&nbsp;
-              <span className="border-b border-dark-green inline">05.12.24.</span>
+              <span className="border-b border-dark-green inline">01.06.25.</span>
             </p>
           </div>
           <div className="terms__content">

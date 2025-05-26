@@ -79,7 +79,7 @@ const Footer = () => {
       </div>
       <div className=" px-4 pt-[clamp(30px,4vw,48px)] pb-2 flex gap-10 md:gap-1 justify-center md:justify-between items-center flex-col md:flex-row flex-wrap ">
         <p className="md:order-none order-2 text-xs font-normal leading-[1.25 text-dark-green] text-dark-green ">
-          &copy;2024 Marmelo Technologies Inc. All rights reserved.
+          &copy;2025 Marmelo Technologies Inc. All rights reserved.
         </p>
         <ul className="flex gap-[10px] md:gap-6 md:flex-row flex-col items-center ">
           <li>

@@ -35,7 +35,7 @@ const PrivacyPolicyPage = () => {
         <section id="welcom" className="bg-yellow">
           <p className="text-xs font-medium text-dark-green m-auto max-w-[200px] flex gap-2 pt-4">
             LAST UPDATED ON
-            <span className="border-b border-dark-green ">04.11.24</span>
+            <span className="border-b border-dark-green ">01.06.25</span>
           </p>
           <div className="policy__content">
             <div className=" mb-[clamp(20px,5vw,45px)]">

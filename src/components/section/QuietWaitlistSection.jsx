@@ -1,15 +1,128 @@
-import React from "react";
-import  Title  from "../ui/Title";
+import React, { useState, useEffect } from "react";
+import { z } from "zod";
+import Title from "../ui/Title";
 import { useNavigate } from "react-router";
 import appImage from '../../assets/images/app.png'
 import appMobileImage from '../../assets/images/app-mobile.png'
 
+const formSchema = z.object({
+  email: z.string().min(1, "Please enter your email and phone number."),
+  phone: z.string()
+    .min(1, "Please enter your email and phone number.")
+    .refine((val) => /^\d{10,}$/.test(val.replace(/\s/g, '')), {
+      message: "Please enter correct phone number"
+    })
+});
+
 const QuietWaitlistSection = () => {
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: '',
+    phone: ''
+  });
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [counter, setCounter] = useState(() => {
+    const savedCounter = localStorage.getItem('waitlistCounter');
+    return savedCounter ? parseInt(savedCounter) : 27;
+  });
+  const [successMessage, setSuccessMessage] = useState('');
 
-  const handlerOnClick = (e) => {
+  useEffect(() => {
+    localStorage.setItem('waitlistCounter', counter.toString());
+  }, [counter]);
+
+  const submitToHubSpot = async (data) => {
+    try {
+      const response = await fetch(
+        'https://api.hsforms.com/submissions/v3/integration/submit/242864031/22b0d541-da12-4cfa-afd9-deffd1e3db9a',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            fields: [
+              {
+                name: 'email',
+                value: data.email
+              },
+              {
+                name: 'phone',
+                value: data.phone
+              }
+            ]
+          })
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to submit form');
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Error submitting to HubSpot:', error);
+      return false;
+    }
+  };
+
+  const validateForm = () => {
+    try {
+      formSchema.parse(formData);
+      setErrors({});
+      return true;
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const newErrors = {};
+        error.errors.forEach((err) => {
+          newErrors[err.path[0]] = err.message;
+        });
+        setErrors(newErrors);
+      }
+      return false;
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    
+    if (name === 'phone') {
+      // Remove any non-digit characters
+      const digitsOnly = value.replace(/\D/g, '');
+      setFormData(prev => ({
+        ...prev,
+        [name]: digitsOnly
+      }))
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
+  };
+
+  const handlerOnClick = async (e) => {
     e.preventDefault();
-    navigate("/after-singup")
+    const isValid = validateForm();
+    
+    if (isValid) {
+      setIsSubmitting(true);
+      const success = await submitToHubSpot(formData);
+      setIsSubmitting(false);
+      
+      if (success) {
+        setCounter(prev => prev + 1);
+        setSuccessMessage('Thank you for joining our waitlist!');
+        setTimeout(() => {
+          navigate("/after-singup");
+        }, 1000);
+      } else {
+        setErrors({
+          general: 'Something went wrong. Please try again.'
+        });
+      }
+    }
   };
 
   return (
@@ -41,13 +154,19 @@ const QuietWaitlistSection = () => {
               <div className="flex flex-col gap-2 mb-5">
                 <input
                   type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   placeholder="EMAIL"
-                  className="py-4 px-7 placeholder:text-dark-green/70 font-garnett border-none text-xs rounded-full bg-white"
+                  className={`focus:outline-none py-4 px-7 placeholder:text-dark-green/70 font-garnett border-none text-xs rounded-full bg-white ${errors.email || errors.general ? 'border-2 border-red-500' : ''}`}
                 />
                 <input
                   type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
                   placeholder="PHONE"
-                  className="py-4 px-7 placeholder:text-dark-green/70 font-garnett border-none text-xs rounded-full bg-white"
+                  className={`focus:outline-none py-4 px-7 placeholder:text-dark-green/70 font-garnett border-none text-xs rounded-full bg-white ${errors.phone || errors.general ? 'border-2 border-red-500' : ''}`}
                 />
               </div>
               <p className="flex font-garnett flex-col text-dark-green md:text-sm text-[10px] text-center mb-10">
@@ -55,17 +174,23 @@ const QuietWaitlistSection = () => {
                 <span>our low-key legendary launch party.</span>
               </p>
               <button
-                type="button"
-                className="bg-dark-green font-garnett text-yellow self-center  font-medium text-xs  rounded-full px-14 py-5 cursor-pointer mt-2"
+                type="submit"
+                className="bg-dark-green font-garnett text-yellow self-center font-medium text-xs rounded-full px-14 py-5 cursor-pointer mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={handlerOnClick}
+                disabled={isSubmitting}
               >
-                JOIN THE WAITLIST
+                {isSubmitting ? 'SUBMITTING...' : 'JOIN THE WAITLIST'}
               </button>
+              {(errors.email || errors.phone || errors.general) && (
+                <p className="text-red-500 text-center mt-4 font-medium text-sm">
+                  {errors.email || errors.phone || errors.general}
+                </p>
+              )}
             </form>
           </div>
           <div className="flex justify-center flex-col items-center">
             <p className="text-dark-green font-bold md:text-[40px] text-3xl font-greed">
-              27
+              {counter}
             </p>
             <p className="text-dark-green font-medium md:text-3xl text-xl font-greed">
               people have already joined quietly.
