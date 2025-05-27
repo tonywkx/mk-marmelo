@@ -5,13 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Marmelo</title>
     <link rel="icon" href="/favicon.svg" />
+
+    <!-- GitHub Pages SPA redirect script -->
+  <script type="text/javascript">
+    // Single Page Apps for GitHub Pages
+    // MIT License
+    // https://github.com/rafgraph/spa-github-pages
+    (function(l) {
+      if (l.search[1] === '/' ) {
+        var decoded = l.search.slice(1).split('&').map(function(s) { 
+          return s.replace(/~and~/g, '&')
+        }).join('?');
+        window.history.replaceState(null, null,
+            l.pathname.slice(0, -1) + decoded + l.hash
+        );
+      }
+    }(window.location))
+  </script>
     
     <!-- Мета-теги для превью ссылок -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="http://localhost:5173/" />
+    <meta property="og:url" content="https://tonywkx.github.io/mk-marmelo/" />
     <meta property="og:title" content="Marmelo – Meet in the Wild" />
-    <meta property="og:description" content="Marmelo – Meet in the Wild" />
-    <meta property="og:image" content="http://localhost:5173/open-graph.png" />
+    <meta property="og:description" content="Discover people in cafés, bars, and everyday places — in real life, in real time. Just you, them, and the timing." />
+    <meta property="og:image" content="https://tonywkx.github.io/mk-marmelo/open-graph.png" />
   </head>
   <body class="min-w-[400px]">
     <div id="root"></div>
