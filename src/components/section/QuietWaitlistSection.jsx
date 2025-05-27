@@ -2,15 +2,15 @@ import React, { useState, useEffect } from "react";
 import { z } from "zod";
 import Title from "../ui/Title";
 import { useNavigate } from "react-router";
-import appImage from '../../assets/images/app.png'
-import appMobileImage from '../../assets/images/app-mobile.png'
+import appImage from "../../assets/images/app.png";
+import appMobileImage from "../../assets/images/app-mobile.png";
 
 const formSchema = z.object({
-  email: z.string().min(1, "Please enter your email."),
+  email: z.string().email({ message: "Invalid email format" }),
   phone: z
     .string()
     .optional()
-    .refine(val => !val || /^\+?\d{10,15}$/.test(val), {
+    .refine((val) => !val || /^\+?\d{10,15}$/.test(val), {
       message: "Invalid phone format",
     }),
 });
@@ -18,70 +18,77 @@ const formSchema = z.object({
 const QuietWaitlistSection = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: '',
-    phone: ''
+    email: "",
+    phone: "",
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [counter, setCounter] = useState(() => {
-    const savedCounter = localStorage.getItem('waitlistCounter');
+    const savedCounter = localStorage.getItem("waitlistCounter");
     return savedCounter ? parseInt(savedCounter) : 27;
   });
 
-
   useEffect(() => {
-    localStorage.setItem('waitlistCounter', counter.toString());
+    localStorage.setItem("waitlistCounter", counter.toString());
   }, [counter]);
 
   const submitToHubSpot = async (data) => {
     try {
       const fields = [
         {
-          name: 'email',
-          value: data.email
-        }
+          name: "email",
+          value: data.email,
+        },
       ];
 
       if (data.phone && data.phone.trim()) {
         fields.push({
-          name: 'phone',
-          value: data.phone
+          name: "mobilephone",
+          value: data.phone,
         });
       }
 
       const requestBody = { fields };
-    
+      console.log(requestBody);
+
       const response = await fetch(
-        'https://api.hsforms.com/submissions/v3/integration/submit/242864031/22b0d541-da12-4cfa-afd9-deffd1e3db9a',
+        "https://api.hsforms.com/submissions/v3/integration/submit/242864031/22b0d541-da12-4cfa-afd9-deffd1e3db9a",
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(requestBody)
+          body: JSON.stringify(requestBody),
         }
       );
 
       if (!response.ok) {
-        throw new Error('Failed to submit form');
+        throw new Error("Failed to submit form");
       }
 
       return true;
     } catch (error) {
-      console.error('Error submitting to HubSpot:', error);
+      console.error("Error submitting to HubSpot:", error);
       return false;
     }
   };
 
   const validateForm = () => {
+    const fieldErrors = {};
+
+    if (!formData.email.trim()) {
+      fieldErrors.email = "Please enter your email";
+      setErrors(fieldErrors);
+      return false;
+    }
+
     try {
       formSchema.parse(formData);
       setErrors({});
       return true;
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const fieldErrors = {};
-        error.errors.forEach(err => {
+        error.errors.forEach((err) => {
           if (err.path.length > 0) {
             fieldErrors[err.path[0]] = err.message;
           }
@@ -94,20 +101,20 @@ const QuietWaitlistSection = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
-    if (name === 'phone') {
+
+    if (name === "phone") {
       // Сохраняем плюс в начале, если он есть
-      const hasPlus = value.startsWith('+');
+      const hasPlus = value.startsWith("+");
       // Удаляем все нецифровые символы, кроме плюса в начале
-      const digitsOnly = value.replace(/\D/g, '');
-      setFormData(prev => ({
+      const digitsOnly = value.replace(/\D/g, "");
+      setFormData((prev) => ({
         ...prev,
-        [name]: hasPlus ? '+' + digitsOnly : digitsOnly
-      }))
+        [name]: hasPlus ? "+" + digitsOnly : digitsOnly,
+      }));
     } else {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        [name]: value
+        [name]: value,
       }));
     }
   };
@@ -115,20 +122,20 @@ const QuietWaitlistSection = () => {
   const handlerOnClick = async (e) => {
     e.preventDefault();
     const isValid = validateForm();
-    
+
     if (isValid) {
       setIsSubmitting(true);
       const success = await submitToHubSpot(formData);
       setIsSubmitting(false);
-      
+
       if (success) {
-        setCounter(prev => prev + 1);
+        setCounter((prev) => prev + 1);
         setTimeout(() => {
           navigate("/after-singup");
         }, 500);
       } else {
         setErrors({
-          general: 'Something went wrong. Please try again.'
+          general: "Something went wrong. Please try again.",
         });
       }
     }
@@ -139,7 +146,11 @@ const QuietWaitlistSection = () => {
       <div className="container">
         <div className="py-15">
           <Title
-            titles={["WANT IN?", "WE'LL KEEP IT\u00A0QUIET.", "UNTIL IT'S\u00A0TIME."]}
+            titles={[
+              "WANT IN?",
+              "WE'LL KEEP IT\u00A0QUIET.",
+              "UNTIL IT'S\u00A0TIME.",
+            ]}
             className="text-dark-green font-black uppercase mb-10"
           />
           <p className="text-dark-green font-medium md:text-lg text-base mb-10 text-center">
@@ -147,10 +158,7 @@ const QuietWaitlistSection = () => {
           </p>
           <div className=" flex justify-center items-center mb-[90px]">
             <picture>
-              <source
-                media="(min-width: 768px)"
-                srcSet={appMobileImage}
-              />
+              <source media="(min-width: 768px)" srcSet={appMobileImage} />
               <img
                 className="md:max-w-[600px]"
                 src={appImage}
@@ -167,7 +175,7 @@ const QuietWaitlistSection = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="EMAIL"
-                  className={`focus:outline-none py-4 px-7 placeholder:text-dark-green/70 font-garnett border-none text-xs rounded-full bg-white ${errors.email || errors.general ? 'border-2 border-red-500' : ''}`}
+                  className={`focus:outline-none py-4 px-7 placeholder:text-dark-green/70 font-garnett border-none text-xs rounded-full bg-white`}
                 />
                 <input
                   type="tel"
@@ -175,7 +183,7 @@ const QuietWaitlistSection = () => {
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder="PHONE"
-                  className={`focus:outline-none py-4 px-7 placeholder:text-dark-green/70 font-garnett border-none text-xs rounded-full bg-white ${errors.phone ? 'border-2 border-red-500' : ''}`}
+                  className={`focus:outline-none py-4 px-7 placeholder:text-dark-green/70 font-garnett border-none text-xs rounded-full bg-white`}
                 />
               </div>
               <p className="flex font-garnett flex-col text-dark-green md:text-sm text-[10px] text-center mb-10">
@@ -188,7 +196,7 @@ const QuietWaitlistSection = () => {
                 onClick={handlerOnClick}
                 disabled={isSubmitting}
               >
-                {isSubmitting ? 'SUBMITTING...' : 'JOIN THE WAITLIST'}
+                {isSubmitting ? "SUBMITTING..." : "JOIN THE WAITLIST"}
               </button>
               {(errors.email || errors.phone || errors.general) && (
                 <p className="text-red-500 text-center mt-4 font-medium text-sm">
