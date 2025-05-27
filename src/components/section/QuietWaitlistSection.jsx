@@ -6,12 +6,13 @@ import appImage from '../../assets/images/app.png'
 import appMobileImage from '../../assets/images/app-mobile.png'
 
 const formSchema = z.object({
-  email: z.string().min(1, "Please enter your email and phone number."),
-  phone: z.string()
-    .min(1, "Please enter your email and phone number.")
-    .refine((val) => /^\d{10,}$/.test(val.replace(/\s/g, '')), {
-      message: "Please enter correct phone number"
-    })
+  email: z.string().min(1, "Please enter your email."),
+  phone: z
+    .string()
+    .optional()
+    .refine(val => !val || /^\+?\d{10,15}$/.test(val), {
+      message: "Invalid phone format",
+    }),
 });
 
 const QuietWaitlistSection = () => {
@@ -26,7 +27,7 @@ const QuietWaitlistSection = () => {
     const savedCounter = localStorage.getItem('waitlistCounter');
     return savedCounter ? parseInt(savedCounter) : 27;
   });
-  const [successMessage, setSuccessMessage] = useState('');
+
 
   useEffect(() => {
     localStorage.setItem('waitlistCounter', counter.toString());
@@ -34,6 +35,22 @@ const QuietWaitlistSection = () => {
 
   const submitToHubSpot = async (data) => {
     try {
+      const fields = [
+        {
+          name: 'email',
+          value: data.email
+        }
+      ];
+
+      if (data.phone && data.phone.trim()) {
+        fields.push({
+          name: 'phone',
+          value: data.phone
+        });
+      }
+
+      const requestBody = { fields };
+    
       const response = await fetch(
         'https://api.hsforms.com/submissions/v3/integration/submit/242864031/22b0d541-da12-4cfa-afd9-deffd1e3db9a',
         {
@@ -41,18 +58,7 @@ const QuietWaitlistSection = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            fields: [
-              {
-                name: 'email',
-                value: data.email
-              },
-              {
-                name: 'phone',
-                value: data.phone
-              }
-            ]
-          })
+          body: JSON.stringify(requestBody)
         }
       );
 
@@ -74,11 +80,13 @@ const QuietWaitlistSection = () => {
       return true;
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const newErrors = {};
-        error.errors.forEach((err) => {
-          newErrors[err.path[0]] = err.message;
+        const fieldErrors = {};
+        error.errors.forEach(err => {
+          if (err.path.length > 0) {
+            fieldErrors[err.path[0]] = err.message;
+          }
         });
-        setErrors(newErrors);
+        setErrors(fieldErrors);
       }
       return false;
     }
@@ -88,11 +96,13 @@ const QuietWaitlistSection = () => {
     const { name, value } = e.target;
     
     if (name === 'phone') {
-      // Remove any non-digit characters
+      // Сохраняем плюс в начале, если он есть
+      const hasPlus = value.startsWith('+');
+      // Удаляем все нецифровые символы, кроме плюса в начале
       const digitsOnly = value.replace(/\D/g, '');
       setFormData(prev => ({
         ...prev,
-        [name]: digitsOnly
+        [name]: hasPlus ? '+' + digitsOnly : digitsOnly
       }))
     } else {
       setFormData(prev => ({
@@ -113,10 +123,9 @@ const QuietWaitlistSection = () => {
       
       if (success) {
         setCounter(prev => prev + 1);
-        setSuccessMessage('Thank you for joining our waitlist!');
         setTimeout(() => {
           navigate("/after-singup");
-        }, 1000);
+        }, 500);
       } else {
         setErrors({
           general: 'Something went wrong. Please try again.'
@@ -166,7 +175,7 @@ const QuietWaitlistSection = () => {
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder="PHONE"
-                  className={`focus:outline-none py-4 px-7 placeholder:text-dark-green/70 font-garnett border-none text-xs rounded-full bg-white ${errors.phone || errors.general ? 'border-2 border-red-500' : ''}`}
+                  className={`focus:outline-none py-4 px-7 placeholder:text-dark-green/70 font-garnett border-none text-xs rounded-full bg-white ${errors.phone ? 'border-2 border-red-500' : ''}`}
                 />
               </div>
               <p className="flex font-garnett flex-col text-dark-green md:text-sm text-[10px] text-center mb-10">
