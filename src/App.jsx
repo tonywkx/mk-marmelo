@@ -5,10 +5,12 @@ import CookiePolicyPage from "./pages/CookiePolicyPage";
 import TermsService from "./pages/TermsService";
 import AfterSingUp from "./pages/AfterSingUp";
 import ScrollToTop from "./components/ScrollToTop";
+import Analytics from "./components/Analytics";
 
 function App() {
   return (
     <>
+      <Analytics />
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<MainPage />} />
