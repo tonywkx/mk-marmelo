@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { z } from "zod";
+import { PhoneInput } from 'react-international-phone';
+import 'react-international-phone/style.css';
 import Title from "../ui/Title";
 import { useNavigate } from "react-router";
 import appImage from "../../assets/images/app.png";
@@ -17,10 +19,12 @@ const formSchema = z.object({
 
 const QuietWaitlistSection = () => {
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: "",
     phone: "",
   });
+
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [counter, setCounter] = useState(() => {
@@ -34,22 +38,11 @@ const QuietWaitlistSection = () => {
 
   const submitToHubSpot = async (data) => {
     try {
-      const fields = [
-        {
-          name: "email",
-          value: data.email,
-        },
-      ];
+      const fields = [{ name: "email", value: data.email }];
 
-      if (data.phone && data.phone.trim()) {
-        fields.push({
-          name: "mobilephone",
-          value: data.phone,
-        });
+      if (formData.phone.trim()) {
+        fields.push({ name: "mobilephone", value: formData.phone });
       }
-
-      const requestBody = { fields };
-      console.log(requestBody);
 
       const response = await fetch(
         "https://api.hsforms.com/submissions/v3/integration/submit/242864031/22b0d541-da12-4cfa-afd9-deffd1e3db9a",
@@ -58,13 +51,11 @@ const QuietWaitlistSection = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(requestBody),
+          body: JSON.stringify({ fields }),
         }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to submit form");
-      }
+      if (!response.ok) throw new Error("Failed to submit form");
 
       return true;
     } catch (error) {
@@ -77,15 +68,13 @@ const QuietWaitlistSection = () => {
     const fieldErrors = {};
 
     if (!formData.email.trim()) {
-      fieldErrors.email = "Please enter your email";
+      fieldErrors.email = "Oops, mind dropping your email in?";
       setErrors(fieldErrors);
       return false;
     }
 
     try {
       formSchema.parse(formData);
-      setErrors({});
-      return true;
     } catch (error) {
       if (error instanceof z.ZodError) {
         error.errors.forEach((err) => {
@@ -93,37 +82,33 @@ const QuietWaitlistSection = () => {
             fieldErrors[err.path[0]] = err.message;
           }
         });
-        setErrors(fieldErrors);
       }
-      return false;
     }
+
+    setErrors(fieldErrors);
+    return Object.keys(fieldErrors).length === 0;
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
-    if (name === "phone") {
-      // Сохраняем плюс в начале, если он есть
-      const hasPlus = value.startsWith("+");
-      // Удаляем все нецифровые символы, кроме плюса в начале
-      const digitsOnly = value.replace(/\D/g, "");
-      setFormData((prev) => ({
-        ...prev,
-        [name]: hasPlus ? "+" + digitsOnly : digitsOnly,
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
+  const handlePhoneChange = (phone) => {
+    setFormData((prev) => ({
+      ...prev,
+      phone: phone,
+    }));
   };
 
   const handlerOnClick = async (e) => {
     e.preventDefault();
-    const isValid = validateForm();
+    const isValidForm = validateForm();
 
-    if (isValid) {
+    if (isValidForm) {
       setIsSubmitting(true);
       const success = await submitToHubSpot(formData);
       setIsSubmitting(false);
@@ -156,12 +141,12 @@ const QuietWaitlistSection = () => {
           <p className="text-dark-green font-medium md:text-lg text-base mb-10 text-center">
             Free for the first 500. For good.
           </p>
-          <div className=" flex justify-center items-center mb-[90px]">
+          <div className="flex justify-center items-center mb-[90px]">
             <picture>
-              <source media="(min-width: 768px)" srcSet={appMobileImage} />
+              <source media="(min-width: 768px)" srcSet={appImage} />
               <img
                 className="md:max-w-[600px]"
-                src={appImage}
+                src={appMobileImage}
                 alt="App preview"
               />
             </picture>
@@ -175,16 +160,20 @@ const QuietWaitlistSection = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="EMAIL"
-                  className={`focus:outline-none py-4 px-7 placeholder:text-dark-green/70 font-garnett border-none text-xs rounded-full bg-white`}
+                  className="focus:outline-none py-4 px-7 placeholder:text-dark-green/70 font-garnett border-none text-xs rounded-full bg-white"
                 />
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="PHONE"
-                  className={`focus:outline-none py-4 px-7 placeholder:text-dark-green/70 font-garnett border-none text-xs rounded-full bg-white`}
-                />
+                <div className="relative">
+                  <PhoneInput
+                    value={formData.phone}
+                    onChange={handlePhoneChange}
+                    defaultCountry={undefined}
+                    disableDialCodePrefill={true}
+                    inputProps={{
+                      placeholder: "PHONE",
+                      className: "focus:outline-none py-4 px-4 placeholder:text-dark-green/70 font-garnett border-none text-xs rounded-full bg-white w-full"
+                    }}
+                  />
+                </div>
               </div>
               <p className="flex font-garnett flex-col text-dark-green md:text-sm text-[10px] text-center mb-10">
                 <span>We'll text a few early birds with a VIP invite to</span>

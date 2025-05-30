@@ -144,6 +144,7 @@
   justify-self: center;
 }
 
+
 @media(min-width: 768px) {
 
 
@@ -178,4 +179,38 @@
     width: 100%;
     right: -100%
   }
+}
+
+/* Стили для react-international-phone */
+.react-international-phone-input-container {
+  border-radius: 9999px !important;
+  background: white !important;
+  border: none !important;
+}
+
+.react-international-phone-input {
+  font-family: var(--garnett) !important;
+  font-size: 12px !important;
+  padding-left: 80px !important;
+}
+
+.react-international-phone-country-selector-button {
+  border: none !important;
+  background: white !important;
+  border-radius: 9999px 0 0 9999px !important;
+  height: 100% !important;
+  left: 0 !important;
+  padding-left: 16px !important;
+  cursor: pointer !important;
+}
+
+.react-international-phone-country-selector-button:focus {
+  outline: none !important;
+}
+
+.react-international-phone-dropdown {
+  border-radius: 8px !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+  z-index: 9999 !important;
 }
