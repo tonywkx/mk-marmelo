@@ -15,21 +15,21 @@ const HomeSection = () => {
 
   return (
     <>
-      <div className="home h-dvh bg-[url('assets/images/home-mobile.jpg')] bg-dark-green sm:bg-[url('assets/images/home.png')] bg-no-repeat bg-cover bg-center">
+      <div className="home h-dvh bg-[url('assets/images/home-mobile.jpg')] bg-dark-green min-[500px]:bg-[url('assets/images/home.png')] bg-no-repeat bg-cover bg-center">
         <div className="flex flex-col h-full">
         <HeaderMain/>
           <div className="flex flex-col justify-between h-full">
             <div className="flex items-center justify-center">
               <h1
-                className='flex text-center flex-col text-[clamp(40px,10vw,120px)] font-bold text-yellow  leading-[0.95833] font-greed md:mt-0 mt-3'
+                className='flex text-center flex-col text-[clamp(40px,10vw,120px)] font-bold text-yellow  leading-[0.85] font-greed sm:mt-2 mt-4'
               >
-                <span className="tracking-[-0.04em]">IT WASN'T A MATCH.</span>
-                <span className="tracking-[-0.04em]">IT WAS A MOMENT.</span>
+                <span className="tracking-[-0.01em]">IT WASN'T A MATCH.</span>
+                <span className="tracking-[-0.01em]">IT WAS A MOMENT.</span>
               </h1>
             </div>
             <button
               onClick={(e) => handleClick(e, "waitlist")}
-              className="mt-auto mb-7 cursor-pointer text-yellow flex gap-2 items-center self-center"
+              className="mt-auto text-xs mb-7 cursor-pointer text-yellow flex gap-2 items-center self-center"
             >
               JOIN THE WAITLIST
               <ArrowYellow />

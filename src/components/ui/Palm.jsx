@@ -1,6 +1,7 @@
 export default function Palm() {
   return (
     <svg
+    className="sm:w-[62px] w-[58px] sm:h-[68px] h-[62px]"
       width="62"
       height="68"
       viewBox="0 0 62 68"
