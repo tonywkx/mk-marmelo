@@ -117,7 +117,7 @@ const QuietWaitlistSection = () => {
             className="text-dark-green font-black uppercase mb-10"
           />
           <p className="text-dark-green font-medium sm:text-base text-sm mb-10 text-center">
-            Free for the first 500. For good.
+            Free for the first 5000. For good.
           </p>
           <div className="flex justify-center items-center sm:mb-20 mb-15">
             <picture>
