@@ -3,7 +3,7 @@ import { Link } from "react-router";
 export default function HeaderMain() {
   return (
     <header className=' border-b border-yellow'>
-      <div className="sm:py-4 py-3 px-4 min-h-10">
+      <div className="sm:py-3.5 py-3 px-4 min-h-10">
         <div className="flex gap-4 justify-center items-center ">
           <Link rel="stylesheet" to="/">
             <svg

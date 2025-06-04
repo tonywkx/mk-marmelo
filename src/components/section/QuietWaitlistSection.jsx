@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { z } from "zod";
-import { PhoneInput } from 'react-international-phone';
-import 'react-international-phone/style.css';
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
 import Title from "../ui/Title";
 import { useNavigate } from "react-router";
 import appImage from "../../assets/images/app.png";
@@ -92,7 +92,7 @@ const QuietWaitlistSection = () => {
       if (success) {
         const newCount = await fetchContactsCount(baseCount);
         setCounter(newCount);
-        
+
         setTimeout(() => {
           navigate("/after-singup");
         }, 500);
@@ -107,23 +107,23 @@ const QuietWaitlistSection = () => {
   return (
     <section id="waitlist" className="bg-yellow">
       <div className="container">
-        <div className="sm:py-16 py-12 ">
+        <div className="sm:py-16 py-11 ">
           <Title
             titles={[
               "WANT IN?",
               "WE'LL KEEP IT\u00A0QUIET.",
               "UNTIL IT'S\u00A0TIME.",
             ]}
-            className="text-dark-green font-black uppercase mb-10"
+            className="text-dark-green font-black uppercase sm:mb-12 mb-11"
           />
-          <p className="text-dark-green font-medium sm:text-base text-sm mb-10 text-center">
+          <p className="text-dark-green font-medium sm:text-base text-sm sm:mb-10 mb-9 text-center">
             Free for the first 5000. For good.
           </p>
-          <div className="flex justify-center items-center sm:mb-20 mb-15">
+          <div className="flex justify-center items-center sm:mb-22 mb-16">
             <picture>
               <source media="(min-width: 768px)" srcSet={appImage} />
               <img
-                className="md:max-w-[600px]"
+                className="md:max-w-[560px]"
                 src={appMobileImage}
                 alt="App preview"
               />
@@ -148,7 +148,8 @@ const QuietWaitlistSection = () => {
                     disableDialCodePrefill={true}
                     inputProps={{
                       placeholder: "PHONE",
-                      className: "focus:outline-none placeholder:text-xs  py-3.5 px-4 placeholder:text-dark-green/70 font-garnett border-none text-xs rounded-full bg-white w-full"
+                      className:
+                        "focus:outline-none placeholder:text-xs  py-3.5 px-4 placeholder:text-dark-green/70 font-garnett border-none text-xs rounded-full bg-white w-full",
                     }}
                   />
                 </div>
@@ -159,7 +160,7 @@ const QuietWaitlistSection = () => {
               </p>
               <button
                 type="submit"
-                className="bg-dark-green font-garnett text-yellow self-center font-medium text-xs rounded-full px-12 py-5 cursor-pointer mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-dark-green font-garnett text-yellow self-center font-medium text-xs rounded-full sm:px-12 px-14 py-5 cursor-pointer mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={handlerOnClick}
                 disabled={isSubmitting}
               >
@@ -171,14 +172,6 @@ const QuietWaitlistSection = () => {
                 </p>
               )}
             </form>
-          </div>
-          <div className="flex justify-center flex-col items-center ">
-            <p className="text-dark-green font-bold text-[40px] leading-[1] font-greed">
-              {counter}
-            </p>
-            <p className="text-dark-green font-medium md:text-[32px] text-xl font-greed">
-              people have already joined quietly.
-            </p>
           </div>
         </div>
       </div>
