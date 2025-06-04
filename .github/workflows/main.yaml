@@ -1,0 +1,57 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '>=22'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build the project
+        run: npm run build
+
+      - name: Deploy to S3 bucket
+        if: github.ref == 'refs/heads/main'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: 'eu-west-1'
+          S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+        run: |
+          aws s3 sync dist/ s3://$S3_BUCKET_NAME --delete
+
+      - name: Invalidate CloudFront Cache and wait for completion
+        if: github.ref == 'refs/heads/main'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: 'eu-west-1'
+          DISTRIBUTION_ID: "E3F4XNSV2XFBSF"
+        run: |
+          # Create an invalidation request
+          INVALIDATION_ID=$(aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*" --query 'Invalidation.Id' --output text)
+          
+          # Poll until the invalidation status is completed
+          while true; do
+            STATUS=$(aws cloudfront get-invalidation --distribution-id $DISTRIBUTION_ID --id $INVALIDATION_ID --query 'Invalidation.Status' --output text)
+            if [ "$STATUS" == "Completed" ]; then
+              echo "Invalidation completed."
+              break
+            else
+              echo "Waiting for invalidation to complete..."
+              sleep 10  # Wait 10 seconds before checking again
+            fi
+          done
