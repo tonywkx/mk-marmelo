@@ -59,6 +59,10 @@
     --white: 0 0% 100%;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     font-family: var(--garnett);
   }
