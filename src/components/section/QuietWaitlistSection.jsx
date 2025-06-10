@@ -4,9 +4,9 @@ import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import Title from "../ui/Title";
 import { useNavigate } from "react-router";
-import appImage from "../../assets/images/app.png";
-import appMobileImage from "../../assets/images/app-mobile.png";
 import { fetchContactsCount, submitToHubSpot } from "../../api/hubspot";
+import appImage from "../../assets/images/app.webp";
+import appMobileImage from "../../assets/images/app-mobile.webp";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email format" }),
@@ -22,6 +22,7 @@ const QuietWaitlistSection = () => {
   const navigate = useNavigate();
   const baseCount = 27;
   const [counter, setCounter] = useState(baseCount);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -121,8 +122,13 @@ const QuietWaitlistSection = () => {
           </p>
           <div className="flex justify-center items-center sm:mb-22 mb-16">
             <picture>
-              <source media="(min-width: 768px)" srcSet={appImage} />
+              <source
+                loading="lazy"
+                media="(min-width: 768px)"
+                srcSet={appImage}
+              />
               <img
+                loading="lazy"
                 className="md:max-w-[560px]"
                 src={appMobileImage}
                 alt="App preview"
@@ -138,7 +144,7 @@ const QuietWaitlistSection = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="EMAIL"
-                  className="focus:outline-none py-3.5 px-7 placeholder:text-xs placeholder:text-dark-green/70 font-garnett border-none text-xs rounded-full bg-white"
+                  className="focus:outline-none py-3.5 px-7 placeholder:text-xs placeholder:text-dark-green/70 font-garnett border-none text-base rounded-full bg-white"
                 />
                 <div className="relative">
                   <PhoneInput
@@ -149,7 +155,7 @@ const QuietWaitlistSection = () => {
                     inputProps={{
                       placeholder: "PHONE",
                       className:
-                        "focus:outline-none placeholder:text-xs  py-3.5 px-4 placeholder:text-dark-green/70 font-garnett border-none text-xs rounded-full bg-white w-full",
+                        "focus:outline-none placeholder:text-xs  py-3.5 px-4 placeholder:text-dark-green/70 font-garnett border-none text-base rounded-full bg-white w-full",
                     }}
                   />
                 </div>

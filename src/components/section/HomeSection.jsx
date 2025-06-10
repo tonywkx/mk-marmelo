@@ -1,3 +1,4 @@
+
 import  HeaderMain  from "../layout/HeaderMain";
 import  ArrowYellow  from "../ui/ArrowYellow";
 
@@ -15,7 +16,7 @@ const HomeSection = () => {
 
   return (
     <>
-      <div className="home h-dvh bg-[url('assets/images/home-mobile.png')] bg-dark-green min-[500px]:bg-[url('assets/images/home.png')] bg-no-repeat bg-cover bg-center">
+      <div className="home h-dvh bg-[url('assets/images/home-mobile.webp')] bg-dark-green min-[500px]:bg-[url('assets/images/home.webp')] bg-no-repeat bg-cover bg-center">
         <div className="flex flex-col h-full">
         <HeaderMain/>
           <div className="flex flex-col justify-between h-full">
