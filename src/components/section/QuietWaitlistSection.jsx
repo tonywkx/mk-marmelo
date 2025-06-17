@@ -5,8 +5,8 @@ import "react-international-phone/style.css";
 import Title from "../ui/Title";
 import { useNavigate } from "react-router";
 import { fetchContactsCount, submitToHubSpot } from "../../api/hubspot";
-import appImage from "../../assets/images/app.webp";
-import appMobileImage from "../../assets/images/app-mobile.webp";
+import appImage from "../../assets/images/app.png";
+import appMobileImage from "../../assets/images/app-mobile.png";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email format" }),
@@ -129,7 +129,7 @@ const QuietWaitlistSection = () => {
               />
               <img
                 loading="lazy"
-                className="md:max-w-[560px]"
+                className="md:max-w-[560px] max-h-[560px]"
                 src={appMobileImage}
                 alt="App preview"
               />
